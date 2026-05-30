@@ -21,17 +21,8 @@ const { title, description = 'ライフスタイルブログ' } = Astro.props;
       line-height: 1.8;
     }
     header {
-      background: #fff;
-      border-bottom: 1px solid #e8e8e4;
-      padding: 0 1.5rem;
-    }
-    .header-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 60px;
+      padding: 2rem 1.5rem 0;
+      text-align: center;
     }
     header a.logo {
       font-size: 1.3rem;
@@ -40,13 +31,6 @@ const { title, description = 'ライフスタイルブログ' } = Astro.props;
       text-decoration: none;
       letter-spacing: 0.05em;
     }
-    nav a {
-      margin-left: 1.5rem;
-      color: #666;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
-    nav a:hover { color: #333; }
     main {
       max-width: 900px;
       margin: 0 auto;
@@ -94,13 +78,7 @@ const { title, description = 'ライフスタイルブログ' } = Astro.props;
       fill="#f5e040" opacity="0.45" />
   </svg>
   <header>
-    <div class="header-inner">
-      <a href="/" class="logo">yoshiwatanabe</a>
-      <nav>
-        <a href="/">記事一覧</a>
-        <a href="/about">about</a>
-      </nav>
-    </div>
+    <a href="/" class="logo">yoshiwatanabe</a>
   </header>
   <main>
     <slot />
