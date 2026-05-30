@@ -62,20 +62,22 @@ const blobs = [
       text-align: center;
       margin: 2rem 0 3rem;
     }
+    .roulette-box {
+      display: inline-block;
+      background: #f2f2f0;
+      border-radius: 20px;
+      padding: 1.6rem 2rem 1.4rem;
+    }
     .roulette-label {
       font-size: 0.75rem;
-      color: #bbb;
+      color: #aaa;
       letter-spacing: 0.12em;
-      margin-bottom: 1rem;
+      margin-bottom: 1.2rem;
     }
     .roulette-machine {
       display: inline-flex;
       gap: 6px;
-      background: #f0f0ee;
-      border-radius: 16px;
-      padding: 8px;
-      margin-bottom: 1.2rem;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom: 1rem;
     }
     .roulette-window {
       width: 120px;
@@ -85,35 +87,20 @@ const blobs = [
       border-radius: 10px;
       position: relative;
       box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    }
-    .roulette-window::before,
-    .roulette-window::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0;
-      height: 14px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .roulette-window::before { top: 0; background: linear-gradient(#fff, transparent); }
-    .roulette-window::after  { bottom: 0; background: linear-gradient(transparent, #fff); }
-    .roulette-drum {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      transition: transform 0.08s linear;
+      justify-content: center;
     }
     .drum-item {
-      height: 56px;
-      line-height: 56px;
       font-size: 1.15rem;
       font-weight: 700;
       color: #333;
       white-space: nowrap;
       text-align: center;
-      width: 120px;
     }
     .roulette-btn {
+      display: block;
+      margin: 0 auto;
       padding: 0.5rem 1.8rem;
       border: none;
       border-radius: 999px;
@@ -177,39 +164,14 @@ const blobs = [
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-    function spinDrum(drumEl, list, result, duration, onDone) {
-      const itemH = 56;
-      let elapsed = 0;
-      const start = Date.now();
-      let interval = 60;
-
-      function step() {
-        elapsed = Date.now() - start;
-        const progress = Math.min(elapsed / duration, 1);
-        // ease: fast → slow
-        interval = 60 + progress * 200;
-
-        // clear and rebuild drum with random items + result at end
-        drumEl.innerHTML = '';
-        const count = 5;
-        for (let i = 0; i < count; i++) {
-          const div = document.createElement('div');
-          div.className = 'drum-item';
-          div.textContent = i === count - 1 && progress > 0.85 ? result : pick(list);
-          drumEl.appendChild(div);
-        }
-        // scroll to show last item
-        drumEl.style.transform = `translateY(-${(count - 1) * itemH}px)`;
-
-        if (progress < 1) {
-          setTimeout(step, interval);
-        } else {
-          drumEl.innerHTML = `<div class="drum-item">${result}</div>`;
-          drumEl.style.transform = 'translateY(0)';
-          if (onDone) onDone();
-        }
-      }
-      step();
+    function spinSlot(el, list, result, ticks, delay, onDone) {
+      let t = 0;
+      const iv = setInterval(() => {
+        t++;
+        const done = t >= ticks;
+        el.textContent = done ? result : pick(list);
+        if (done) { clearInterval(iv); setTimeout(onDone, delay); }
+      }, 60);
     }
 
     const btn = document.getElementById('roulette-btn');
@@ -220,8 +182,8 @@ const blobs = [
       btn.disabled = true;
       const rAdj = pick(adj);
       const rNou = pick(nou);
-      spinDrum(drumAdj, adj, rAdj, 1200, () => {
-        spinDrum(drumNou, nou, rNou, 1600, () => {
+      spinSlot(drumAdj, adj, rAdj, 20, 200, () => {
+        spinSlot(drumNou, nou, rNou, 26, 0, () => {
           btn.disabled = false;
         });
       });
@@ -233,20 +195,18 @@ const blobs = [
   </a>
 
   <div class="roulette-section">
-    <div class="roulette-label">今日のラッキーアイテム</div>
-    <div class="roulette-machine">
-      <div class="roulette-window">
-        <div class="roulette-drum" id="drum-adj">
-          <div class="drum-item">？</div>
+    <div class="roulette-box">
+      <div class="roulette-label">今日のラッキーアイテム</div>
+      <div class="roulette-machine">
+        <div class="roulette-window">
+          <div class="drum-item" id="drum-adj">？</div>
+        </div>
+        <div class="roulette-window">
+          <div class="drum-item" id="drum-nou">？</div>
         </div>
       </div>
-      <div class="roulette-window">
-        <div class="roulette-drum" id="drum-nou">
-          <div class="drum-item">？</div>
-        </div>
-      </div>
+      <button class="roulette-btn" id="roulette-btn">まわす</button>
     </div>
-    <button class="roulette-btn" id="roulette-btn">まわす</button>
   </div>
 
   <div class="category-nav">
