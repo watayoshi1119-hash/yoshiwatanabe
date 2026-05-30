@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <style>
+    .back { font-size: 0.85rem; color: #888; text-decoration: none; display: inline-block; margin-bottom: 1.5rem; }
+    .back:hover { color: #333; }
+    .meta { margin-bottom: 2rem; }
+    .meta-category {
+      display: inline-block;
+      font-size: 0.75rem;
+      color: #888;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 0.2rem 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+    h1 { font-size: 1.6rem; line-height: 1.4; margin-bottom: 0.5rem; }
+    .date { font-size: 0.8rem; color: #aaa; }
+    .content {
+      max-width: 680px;
+      border-top: 1px solid #e8e8e4;
+      padding-top: 2rem;
+      margin-top: 2rem;
+    }
+    .content :global(h2) { font-size: 1.2rem; margin: 2rem 0 0.8rem; padding-bottom: 0.3rem; border-bottom: 1px solid #e8e8e4; }
+    .content :global(p) { margin-bottom: 1.2rem; }
+    .content :global(ul), .content :global(ol) { margin: 0 0 1.2rem 1.5rem; }
+    .content :global(li) { margin-bottom: 0.3rem; }
+    .content :global(strong) { font-weight: 700; }
+  </style>
+
+  <a href="/" class="back">← 記事一覧に戻る</a>
+
+  <div class="meta">
+    <div class="meta-category">{post.data.category}</div>
+    <h1>{post.data.title}</h1>
+    <div class="date">{post.data.date}</div>
+  </div>
+
+  <div class="content">
+    <Content />
+  </div>
+</BaseLayout>
