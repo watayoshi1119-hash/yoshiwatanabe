@@ -109,12 +109,7 @@ const blobs = [
       text-decoration: none;
       color: inherit;
       display: block;
-    }
-    .card-category {
-      font-size: 0.75rem;
-      color: #888;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.05em;
+      text-align: center;
     }
     .card-title {
       font-size: 1rem;
@@ -126,11 +121,6 @@ const blobs = [
       font-size: 0.85rem;
       color: #666;
       line-height: 1.6;
-    }
-    .card-date {
-      font-size: 0.75rem;
-      color: #aaa;
-      margin-top: 0.8rem;
     }
   </style>
 
@@ -148,10 +138,8 @@ const blobs = [
           <path d={blobs[i % blobs.length]} />
         </svg>
         <a href={`/blog/${post.id}`} class="card-text">
-          <div class="card-category">{post.data.category}</div>
           <div class="card-title">{post.data.title}</div>
           <div class="card-desc">{post.data.description}</div>
-          <div class="card-date">{post.data.date}</div>
         </a>
       </div>
     ))}
