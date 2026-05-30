@@ -8,7 +8,6 @@ const posts = (await getCollection('blog')).sort(
 
 const categories = [...new Set(posts.map(p => p.data.category))];
 
-// objectBoundingBox座標(0-1)でアメーバ形SVGパスを生成
 function generateBlobPath(outerR: number[], innerR: number[]) {
   const cx = 0.5, cy = 0.5;
   const n = outerR.length;
@@ -36,30 +35,12 @@ function generateBlobPath(outerR: number[], innerR: number[]) {
 }
 
 const blobs = [
-  generateBlobPath(
-    [0.62, 0.28, 0.55, 0.22, 0.58, 0.25, 0.60, 0.20],
-    [0.18, 0.38, 0.16, 0.35, 0.20, 0.32, 0.17, 0.36]
-  ),
-  generateBlobPath(
-    [0.25, 0.60, 0.20, 0.58, 0.28, 0.55, 0.22, 0.62],
-    [0.36, 0.17, 0.38, 0.18, 0.32, 0.20, 0.35, 0.16]
-  ),
-  generateBlobPath(
-    [0.58, 0.22, 0.63, 0.25, 0.52, 0.28, 0.60, 0.20],
-    [0.20, 0.35, 0.17, 0.38, 0.22, 0.33, 0.18, 0.37]
-  ),
-  generateBlobPath(
-    [0.28, 0.55, 0.23, 0.62, 0.20, 0.58, 0.26, 0.52],
-    [0.33, 0.18, 0.37, 0.16, 0.36, 0.20, 0.32, 0.22]
-  ),
-  generateBlobPath(
-    [0.60, 0.20, 0.56, 0.28, 0.62, 0.22, 0.50, 0.25],
-    [0.17, 0.38, 0.20, 0.33, 0.16, 0.36, 0.22, 0.35]
-  ),
-  generateBlobPath(
-    [0.22, 0.62, 0.28, 0.50, 0.25, 0.60, 0.20, 0.56],
-    [0.35, 0.16, 0.33, 0.22, 0.38, 0.17, 0.36, 0.20]
-  ),
+  generateBlobPath([0.62,0.28,0.55,0.22,0.58,0.25,0.60,0.20],[0.18,0.38,0.16,0.35,0.20,0.32,0.17,0.36]),
+  generateBlobPath([0.25,0.60,0.20,0.58,0.28,0.55,0.22,0.62],[0.36,0.17,0.38,0.18,0.32,0.20,0.35,0.16]),
+  generateBlobPath([0.58,0.22,0.63,0.25,0.52,0.28,0.60,0.20],[0.20,0.35,0.17,0.38,0.22,0.33,0.18,0.37]),
+  generateBlobPath([0.28,0.55,0.23,0.62,0.20,0.58,0.26,0.52],[0.33,0.18,0.37,0.16,0.36,0.20,0.32,0.22]),
+  generateBlobPath([0.60,0.20,0.56,0.28,0.62,0.22,0.50,0.25],[0.17,0.38,0.20,0.33,0.16,0.36,0.22,0.35]),
+  generateBlobPath([0.22,0.62,0.28,0.50,0.25,0.60,0.20,0.56],[0.35,0.16,0.33,0.22,0.38,0.17,0.36,0.20]),
 ];
 ---
 <BaseLayout title="記事一覧">
@@ -67,17 +48,92 @@ const blobs = [
     .diary-btn {
       display: block;
       text-align: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 0;
     }
     .diary-btn img {
       max-width: 480px;
       width: 100%;
       transition: opacity 0.2s, transform 0.2s;
     }
-    .diary-btn:hover img {
-      opacity: 0.85;
-      transform: scale(1.02);
+    .diary-btn:hover img { opacity: 0.85; transform: scale(1.02); }
+
+    /* ルーレット */
+    .roulette-section {
+      text-align: center;
+      margin: 2rem 0 3rem;
     }
+    .roulette-label {
+      font-size: 0.75rem;
+      color: #bbb;
+      letter-spacing: 0.12em;
+      margin-bottom: 1rem;
+    }
+    .roulette-machine {
+      display: inline-flex;
+      gap: 6px;
+      background: #f0f0ee;
+      border-radius: 16px;
+      padding: 8px;
+      margin-bottom: 1.2rem;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .roulette-window {
+      width: 120px;
+      height: 56px;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 10px;
+      position: relative;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .roulette-window::before,
+    .roulette-window::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 14px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .roulette-window::before { top: 0; background: linear-gradient(#fff, transparent); }
+    .roulette-window::after  { bottom: 0; background: linear-gradient(transparent, #fff); }
+    .roulette-drum {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.08s linear;
+    }
+    .drum-item {
+      height: 56px;
+      line-height: 56px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #333;
+      white-space: nowrap;
+      text-align: center;
+      width: 120px;
+    }
+    .roulette-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.8rem;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #f9c070, #f47840);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(244,120,64,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .roulette-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 14px rgba(244,120,64,0.45); }
+    .roulette-btn:active { transform: translateY(0); }
+    .roulette-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+    /* カテゴリ・カード */
     .category-nav {
       display: flex;
       gap: 0.5rem;
@@ -94,26 +150,14 @@ const blobs = [
       text-decoration: none;
       transition: all 0.2s;
     }
-    .category-btn:hover, .category-btn.active {
-      background: #333;
-      color: #fff;
-      border-color: #333;
-    }
+    .category-btn:hover, .category-btn.active { background: #333; color: #fff; border-color: #333; }
     .posts {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 4rem;
     }
-    .card {
-      position: relative;
-      min-height: 220px;
-    }
-    .card-blob {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
+    .card { position: relative; min-height: 220px; }
+    .card-blob { position: absolute; inset: 0; width: 100%; height: 100%; }
     .card-blob path { fill: #dff0e0; stroke: none; }
     .card:hover .card-blob path { fill: #cce8ce; }
     .card-text {
@@ -129,93 +173,64 @@ const blobs = [
       text-align: center;
       min-height: 220px;
     }
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      line-height: 1.5;
-    }
-    .card-desc {
-      font-size: 0.85rem;
-      color: #666;
-      line-height: 1.6;
-    }
-    .roulette-section {
-      text-align: center;
-      margin: 3rem 0 3.5rem;
-    }
-    .roulette-label {
-      font-size: 0.8rem;
-      color: #aaa;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.8rem;
-    }
-    .roulette-slots {
-      display: flex;
-      justify-content: center;
-      gap: 0.3rem;
-      margin-bottom: 1.2rem;
-    }
-    .slot {
-      display: inline-block;
-      font-size: 1.6rem;
-      font-weight: 700;
-      min-width: 3.5rem;
-      padding: 0.4rem 0.6rem;
-      background: #fff;
-      border-radius: 8px;
-      border: 1px solid #e8e8e4;
-      color: #333;
-      transition: color 0.1s;
-    }
-    .slot.spinning { color: #ccc; }
-    .roulette-btn {
-      padding: 0.5rem 2rem;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      background: #fff;
-      color: #555;
-      font-size: 0.85rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s;
-    }
-    .roulette-btn:hover { background: #333; color: #fff; border-color: #333; }
-    .roulette-btn:disabled { opacity: 0.4; cursor: default; }
+    .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.5; }
+    .card-desc { font-size: 0.85rem; color: #666; line-height: 1.6; }
   </style>
 
   <script>
-    const adj = ['あたらしい','ふるい','やさしい','きびしい','あかるい','くらい','おおきい','ちいさい','うれしい','かなしい','たのしい','こわい','あつい','さむい','はやい','おそい','うつくしい','みにくい','おもい','かるい','あおい','あかい','しろい','くろい','きいろい','あまい','からい','すっぱい','にがい','しょっぱい','ながい','みじかい','やわらかい','かたい','とおい','ちかい','ひろい','せまい','ふかい','あさい'];
-    const par = ['の','が','を','に','と','で','から','まで','より','へ','も','は','だけ','しか','ほど','など','ごと','ずつ','きり','のみ'];
+    const adj = ['あたらしい','ふるい','やさしい','きびしい','あかるい','くらい','おおきい','ちいさい','うれしい','かなしい','たのしい','こわい','あつい','さむい','はやい','おそい','うつくしい','みにくい','おもい','かるい','あおい','あかい','しろい','くろい','あまい','からい','すっぱい','にがい','ながい','みじかい','やわらかい','かたい','とおい','ちかい','ひろい','せまい','ふかい','あさい'];
     const nou = ['とりかぶと','バーミヤン','中央線','喫煙所','紹興酒','増田書店','バス停','夕焼け','珈琲','文庫本','タバコ','公衆電話','踏切','猫','傘','レシート','自販機','橋','月','夢','鍵','手紙','電球','砂糖','鉛筆','窓','骨董品','地図','雑踏','記憶','影','時計','石畳','缶詰','川','ノート','灰皿','切符','路地','電線'];
 
     function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+    function spinDrum(drumEl, list, result, duration, onDone) {
+      const itemH = 56;
+      let elapsed = 0;
+      const start = Date.now();
+      let interval = 60;
+
+      function step() {
+        elapsed = Date.now() - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease: fast → slow
+        interval = 60 + progress * 200;
+
+        // clear and rebuild drum with random items + result at end
+        drumEl.innerHTML = '';
+        const count = 5;
+        for (let i = 0; i < count; i++) {
+          const div = document.createElement('div');
+          div.className = 'drum-item';
+          div.textContent = i === count - 1 && progress > 0.85 ? result : pick(list);
+          drumEl.appendChild(div);
+        }
+        // scroll to show last item
+        drumEl.style.transform = `translateY(-${(count - 1) * itemH}px)`;
+
+        if (progress < 1) {
+          setTimeout(step, interval);
+        } else {
+          drumEl.innerHTML = `<div class="drum-item">${result}</div>`;
+          drumEl.style.transform = 'translateY(0)';
+          if (onDone) onDone();
+        }
+      }
+      step();
+    }
+
     const btn = document.getElementById('roulette-btn');
-    const slots = [
-      { el: document.getElementById('slot-adj'), list: adj },
-      { el: document.getElementById('slot-par'), list: par },
-      { el: document.getElementById('slot-nou'), list: nou },
-    ];
+    const drumAdj = document.getElementById('drum-adj');
+    const drumNou = document.getElementById('drum-nou');
 
     btn.addEventListener('click', () => {
       btn.disabled = true;
-      const results = slots.map(s => pick(s.list));
-      let tick = 0;
-      const total = 24;
-      const interval = setInterval(() => {
-        tick++;
-        slots.forEach((s, i) => {
-          const done = tick > total - (slots.length - i) * 5;
-          s.el.classList.toggle('spinning', !done);
-          s.el.textContent = done ? results[i] : pick(s.list);
-        });
-        if (tick >= total) {
-          clearInterval(interval);
-          slots.forEach((s, i) => { s.el.textContent = results[i]; });
+      const rAdj = pick(adj);
+      const rNou = pick(nou);
+      spinDrum(drumAdj, adj, rAdj, 1200, () => {
+        spinDrum(drumNou, nou, rNou, 1600, () => {
           btn.disabled = false;
-        }
-      }, 80);
+        });
+      });
     });
   </script>
 
@@ -223,21 +238,28 @@ const blobs = [
     <img src="/nikki.png" alt="日記" />
   </a>
 
+  <div class="roulette-section">
+    <div class="roulette-label">今日のラッキーアイテム</div>
+    <div class="roulette-machine">
+      <div class="roulette-window">
+        <div class="roulette-drum" id="drum-adj">
+          <div class="drum-item">？</div>
+        </div>
+      </div>
+      <div class="roulette-window">
+        <div class="roulette-drum" id="drum-nou">
+          <div class="drum-item">？</div>
+        </div>
+      </div>
+    </div>
+    <button class="roulette-btn" id="roulette-btn">🎰 まわす</button>
+  </div>
+
   <div class="category-nav">
     <a href="/" class="category-btn active">すべて</a>
     {categories.map(cat => (
       <a href={`/category/${cat}`} class="category-btn">{cat}</a>
     ))}
-  </div>
-
-  <div class="roulette-section">
-    <div class="roulette-label">今日のラッキーアイテム</div>
-    <div class="roulette-slots">
-      <span class="slot" id="slot-adj">？</span>
-      <span class="slot" id="slot-par">？</span>
-      <span class="slot" id="slot-nou">？</span>
-    </div>
-    <button class="roulette-btn" id="roulette-btn">まわす</button>
   </div>
 
   <div class="posts">
