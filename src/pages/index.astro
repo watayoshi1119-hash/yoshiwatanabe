@@ -63,16 +63,18 @@ const blobs = [
       margin: 2rem 0 3rem;
     }
     .roulette-box {
-      display: inline-block;
+      display: block;
       background: #f2f2f0;
       border-radius: 20px;
       padding: 1.6rem 2rem 1.4rem;
+      max-width: 600px;
+      margin: 0 auto;
     }
-    .roulette-label {
-      font-size: 0.75rem;
-      color: #aaa;
-      letter-spacing: 0.12em;
-      margin-bottom: 1.2rem;
+    .roulette-logo {
+      display: block;
+      max-width: 260px;
+      width: 100%;
+      margin: 0 auto 1.2rem;
     }
     .roulette-machine {
       display: inline-flex;
@@ -196,7 +198,7 @@ const blobs = [
 
   <div class="roulette-section">
     <div class="roulette-box">
-      <div class="roulette-label">今日のラッキーアイテム</div>
+      <img src="/ラッキーアイテム.png" alt="今日のラッキーアイテム" class="roulette-logo" />
       <div class="roulette-machine">
         <div class="roulette-window">
           <div class="drum-item" id="drum-adj">？</div>
