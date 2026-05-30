@@ -59,26 +59,40 @@ const { title, description = 'ライフスタイルブログ' } = Astro.props;
 <body>
   <svg class="bg-blobs" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
     <!-- 左上・見切れ：薄オレンジ -->
-    <path d="M -8 2 C -2 -4 8 -2 12 4 C 17 11 14 20 7 23 C 0 26 -7 22 -10 15 C -13 9 -13 7 -8 2 Z"
-      fill="#f9c88a" opacity="0.7" />
+    <g transform="translate(2,10) scale(1.414) translate(-2,-10)">
+      <path d="M -8 2 C -2 -4 8 -2 12 4 C 17 11 14 20 7 23 C 0 26 -7 22 -10 15 C -13 9 -13 7 -8 2 Z"
+        fill="#f9c88a" opacity="0.7" />
+    </g>
     <!-- 右上・見切れ：中オレンジ -->
-    <path d="M 90 -6 C 96 -10 105 -5 106 3 C 108 12 102 19 94 18 C 87 17 83 10 86 3 C 87 -1 87 -3 90 -6 Z"
-      fill="#f7a050" opacity="0.65" />
+    <g transform="translate(96,6) scale(1.414) translate(-96,-6)">
+      <path d="M 90 -6 C 96 -10 105 -5 106 3 C 108 12 102 19 94 18 C 87 17 83 10 86 3 C 87 -1 87 -3 90 -6 Z"
+        fill="#f7a050" opacity="0.65" />
+    </g>
     <!-- 右中・見切れ：濃オレンジ -->
-    <path d="M 97 44 C 101 38 109 40 111 47 C 113 55 107 62 100 61 C 93 60 90 53 93 46 C 94 42 95 48 97 44 Z"
-      fill="#f46830" opacity="0.6" />
+    <g transform="translate(101,51) scale(1.414) translate(-101,-51)">
+      <path d="M 97 44 C 101 38 109 40 111 47 C 113 55 107 62 100 61 C 93 60 90 53 93 46 C 94 42 95 48 97 44 Z"
+        fill="#f46830" opacity="0.6" />
+    </g>
     <!-- 左下・見切れ：黄色 -->
-    <path d="M -5 80 C 0 74 9 75 11 82 C 13 89 7 97 0 96 C -7 95 -11 88 -9 81 C -8 77 -8 83 -5 80 Z"
-      fill="#f5e040" opacity="0.6" />
+    <g transform="translate(1,85) scale(1.414) translate(-1,-85)">
+      <path d="M -5 80 C 0 74 9 75 11 82 C 13 89 7 97 0 96 C -7 95 -11 88 -9 81 C -8 77 -8 83 -5 80 Z"
+        fill="#f5e040" opacity="0.6" />
+    </g>
     <!-- 右下・見切れ：黄色 -->
-    <path d="M 88 90 C 93 84 101 85 103 92 C 105 99 99 107 92 106 C 85 105 82 98 85 91 C 86 87 86 93 88 90 Z"
-      fill="#f8e84e" opacity="0.55" />
+    <g transform="translate(93,95) scale(1.414) translate(-93,-95)">
+      <path d="M 88 90 C 93 84 101 85 103 92 C 105 99 99 107 92 106 C 85 105 82 98 85 91 C 86 87 86 93 88 90 Z"
+        fill="#f8e84e" opacity="0.55" />
+    </g>
     <!-- 中央左寄り：薄オレンジ -->
-    <path d="M 22 38 C 26 32 35 32 38 39 C 41 46 37 54 30 55 C 23 56 18 50 20 43 C 21 39 20 43 22 38 Z"
-      fill="#f9c070" opacity="0.4" />
+    <g transform="translate(29,44) scale(1.414) translate(-29,-44)">
+      <path d="M 22 38 C 26 32 35 32 38 39 C 41 46 37 54 30 55 C 23 56 18 50 20 43 C 21 39 20 43 22 38 Z"
+        fill="#f9c070" opacity="0.4" />
+    </g>
     <!-- 中央右寄り：黄色 -->
-    <path d="M 62 55 C 66 49 75 49 77 56 C 79 63 74 71 67 71 C 60 71 56 64 58 57 C 59 53 60 59 62 55 Z"
-      fill="#f7e050" opacity="0.38" />
+    <g transform="translate(67,60) scale(1.414) translate(-67,-60)">
+      <path d="M 62 55 C 66 49 75 49 77 56 C 79 63 74 71 67 71 C 60 71 56 64 58 57 C 59 53 60 59 62 55 Z"
+        fill="#f7e050" opacity="0.38" />
+    </g>
   </svg>
   <header>
     <a href="/" class="logo">yoshiwatanabe</a>
