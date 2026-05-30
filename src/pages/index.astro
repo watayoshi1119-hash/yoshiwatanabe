@@ -140,7 +140,84 @@ const blobs = [
       color: #666;
       line-height: 1.6;
     }
+    .roulette-section {
+      text-align: center;
+      margin: 3rem 0 3.5rem;
+    }
+    .roulette-label {
+      font-size: 0.8rem;
+      color: #aaa;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.8rem;
+    }
+    .roulette-slots {
+      display: flex;
+      justify-content: center;
+      gap: 0.3rem;
+      margin-bottom: 1.2rem;
+    }
+    .slot {
+      display: inline-block;
+      font-size: 1.6rem;
+      font-weight: 700;
+      min-width: 3.5rem;
+      padding: 0.4rem 0.6rem;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #e8e8e4;
+      color: #333;
+      transition: color 0.1s;
+    }
+    .slot.spinning { color: #ccc; }
+    .roulette-btn {
+      padding: 0.5rem 2rem;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      background: #fff;
+      color: #555;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .roulette-btn:hover { background: #333; color: #fff; border-color: #333; }
+    .roulette-btn:disabled { opacity: 0.4; cursor: default; }
   </style>
+
+  <script>
+    const adj = ['あたらしい','ふるい','やさしい','きびしい','あかるい','くらい','おおきい','ちいさい','うれしい','かなしい','たのしい','こわい','あつい','さむい','はやい','おそい','うつくしい','みにくい','おもい','かるい','あおい','あかい','しろい','くろい','きいろい','あまい','からい','すっぱい','にがい','しょっぱい','ながい','みじかい','やわらかい','かたい','とおい','ちかい','ひろい','せまい','ふかい','あさい'];
+    const par = ['の','が','を','に','と','で','から','まで','より','へ','も','は','だけ','しか','ほど','など','ごと','ずつ','きり','のみ'];
+    const nou = ['とりかぶと','バーミヤン','中央線','喫煙所','紹興酒','増田書店','バス停','夕焼け','珈琲','文庫本','タバコ','公衆電話','踏切','猫','傘','レシート','自販機','橋','月','夢','鍵','手紙','電球','砂糖','鉛筆','窓','骨董品','地図','雑踏','記憶','影','時計','石畳','缶詰','川','ノート','灰皿','切符','路地','電線'];
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    const btn = document.getElementById('roulette-btn');
+    const slots = [
+      { el: document.getElementById('slot-adj'), list: adj },
+      { el: document.getElementById('slot-par'), list: par },
+      { el: document.getElementById('slot-nou'), list: nou },
+    ];
+
+    btn.addEventListener('click', () => {
+      btn.disabled = true;
+      const results = slots.map(s => pick(s.list));
+      let tick = 0;
+      const total = 24;
+      const interval = setInterval(() => {
+        tick++;
+        slots.forEach((s, i) => {
+          const done = tick > total - (slots.length - i) * 5;
+          s.el.classList.toggle('spinning', !done);
+          s.el.textContent = done ? results[i] : pick(s.list);
+        });
+        if (tick >= total) {
+          clearInterval(interval);
+          slots.forEach((s, i) => { s.el.textContent = results[i]; });
+          btn.disabled = false;
+        }
+      }, 80);
+    });
+  </script>
 
   <a href="/diary" class="diary-btn">
     <img src="/nikki.png" alt="日記" />
@@ -151,6 +228,16 @@ const blobs = [
     {categories.map(cat => (
       <a href={`/category/${cat}`} class="category-btn">{cat}</a>
     ))}
+  </div>
+
+  <div class="roulette-section">
+    <div class="roulette-label">今日のラッキーアイテム</div>
+    <div class="roulette-slots">
+      <span class="slot" id="slot-adj">？</span>
+      <span class="slot" id="slot-par">？</span>
+      <span class="slot" id="slot-nou">？</span>
+    </div>
+    <button class="roulette-btn" id="roulette-btn">まわす</button>
   </div>
 
   <div class="posts">
