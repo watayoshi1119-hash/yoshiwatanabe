@@ -1,11 +1,42 @@
 ---
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const entries = (await getCollection('diary')).sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
 ---
 <BaseLayout title="日記">
   <style>
-    h1 { font-size: 1.4rem; margin-bottom: 2rem; text-align: center; }
-    p { text-align: center; color: #888; }
+    .diary-entries { max-width: 680px; margin: 0 auto; }
+    .entry { margin-bottom: 4rem; }
+    .entry-date {
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.05em;
+    }
+    .entry-body :global(p) { margin-bottom: 0.8rem; line-height: 1.9; }
+    .entry-body :global(br) { display: block; content: ""; }
+    .divider {
+      border: none;
+      border-top: 1px solid #e8e8e4;
+      margin: 3rem 0;
+    }
   </style>
-  <h1>日記</h1>
-  <p>まだ記事がありません。</p>
+
+  <div class="diary-entries">
+    {entries.map(async (entry, i) => {
+      const { Content } = await render(entry);
+      return (
+        <>
+          <div class="entry">
+            <div class="entry-date">【{entry.data.date}】</div>
+            <div class="entry-body"><Content /></div>
+          </div>
+          {i < entries.length - 1 && <hr class="divider" />}
+        </>
+      );
+    })}
+  </div>
 </BaseLayout>
