@@ -64,6 +64,20 @@ const blobs = [
 ---
 <BaseLayout title="記事一覧">
   <style>
+    .diary-btn {
+      display: block;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .diary-btn img {
+      max-width: 480px;
+      width: 100%;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .diary-btn:hover img {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
     .category-nav {
       display: flex;
       gap: 0.5rem;
@@ -127,6 +141,10 @@ const blobs = [
       line-height: 1.6;
     }
   </style>
+
+  <a href="/diary" class="diary-btn">
+    <img src="/nikki.png" alt="日記" />
+  </a>
 
   <div class="category-nav">
     <a href="/" class="category-btn active">すべて</a>
