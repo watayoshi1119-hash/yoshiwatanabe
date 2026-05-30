@@ -64,16 +64,6 @@ const blobs = [
 ];
 ---
 <BaseLayout title="記事一覧">
-  <svg width="0" height="0" style="position:absolute">
-    <defs>
-      {blobs.map((d, i) => (
-        <clipPath id={`blob${i + 1}`} clipPathUnits="objectBoundingBox">
-          <path d={d} />
-        </clipPath>
-      ))}
-    </defs>
-  </svg>
-
   <style>
     .category-nav {
       display: flex;
@@ -102,18 +92,25 @@ const blobs = [
       gap: 4rem;
     }
     .card {
-      background: #fff;
-      border: 1.5px solid #e8e8e4;
-      transition: box-shadow 0.2s;
+      position: relative;
+      min-height: 220px;
     }
-    .card:nth-child(6n+1) { clip-path: url(#blob1); }
-    .card:nth-child(6n+2) { clip-path: url(#blob2); }
-    .card:nth-child(6n+3) { clip-path: url(#blob3); }
-    .card:nth-child(6n+4) { clip-path: url(#blob4); }
-    .card:nth-child(6n+5) { clip-path: url(#blob5); }
-    .card:nth-child(6n+6) { clip-path: url(#blob6); }
-    .card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.12); }
-    .card a { text-decoration: none; color: inherit; display: block; padding: 2rem; }
+    .card-blob {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .card-blob path { fill: #fff; stroke: #e8e8e4; stroke-width: 1.5; }
+    .card:hover .card-blob path { fill: #f7f7f5; }
+    .card-text {
+      position: relative;
+      z-index: 1;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
     .card-category {
       font-size: 0.75rem;
       color: #888;
@@ -146,9 +143,12 @@ const blobs = [
   </div>
 
   <div class="posts">
-    {posts.map(post => (
+    {posts.map((post, i) => (
       <div class="card">
-        <a href={`/blog/${post.id}`}>
+        <svg class="card-blob" viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d={blobs[i % blobs.length]} />
+        </svg>
+        <a href={`/blog/${post.id}`} class="card-text">
           <div class="card-category">{post.data.category}</div>
           <div class="card-title">{post.data.title}</div>
           <div class="card-desc">{post.data.description}</div>
