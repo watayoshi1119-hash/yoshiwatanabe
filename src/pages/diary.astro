@@ -5,11 +5,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const entries = (await getCollection('diary')).sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
+
+const latest = entries[0];
+const { Content } = await render(latest);
 ---
 <BaseLayout title="日記">
   <style>
-    .diary-entries { max-width: 680px; margin: 0 auto; }
-    .entry { margin-bottom: 4rem; }
+    .diary-wrap { max-width: 680px; margin: 0 auto; }
     .entry-date {
       font-size: 0.85rem;
       color: #aaa;
@@ -17,26 +19,10 @@ const entries = (await getCollection('diary')).sort(
       letter-spacing: 0.05em;
     }
     .entry-body :global(p) { margin-bottom: 0.8rem; line-height: 1.9; }
-    .entry-body :global(br) { display: block; content: ""; }
-    .divider {
-      border: none;
-      border-top: 1px solid #e8e8e4;
-      margin: 3rem 0;
-    }
   </style>
 
-  <div class="diary-entries">
-    {entries.map(async (entry, i) => {
-      const { Content } = await render(entry);
-      return (
-        <>
-          <div class="entry">
-            <div class="entry-date">【{entry.data.date}】</div>
-            <div class="entry-body"><Content /></div>
-          </div>
-          {i < entries.length - 1 && <hr class="divider" />}
-        </>
-      );
-    })}
+  <div class="diary-wrap">
+    <div class="entry-date">【{latest.data.date}】</div>
+    <div class="entry-body"><Content /></div>
   </div>
 </BaseLayout>
