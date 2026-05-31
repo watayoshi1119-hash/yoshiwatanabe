@@ -59,167 +59,114 @@ const blobs = [
     .diary-btn:hover img { opacity: 0.85; transform: scale(1.02); }
 
     /* ルーレット */
-    /* 吹き出しひとこと */
+    /* ベントグリッド */
+    .bento {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 14px;
+    }
+    .tile {
+      border-radius: 24px;
+      padding: 28px;
+      overflow: hidden;
+    }
+
+    /* タイル配置 */
+    .tile-greeting { grid-column: 1; grid-row: 1; background: #fef9ec; display: flex; flex-direction: column; justify-content: center; }
+    .tile-diary    { grid-column: 2; grid-row: 1 / 3; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .tile-song     { grid-column: 3; grid-row: 1 / 3; background: #f0f4ff; display: flex; flex-direction: column; }
+    .tile-roulette { grid-column: 1; grid-row: 2; background: #f2f2f0; text-align: center; }
+    .tile-articles { grid-column: 1 / 4; grid-row: 3; background: transparent; padding: 14px 0 0; }
+
+    /* 吹き出し */
     .greeting-bubble {
       font-family: 'Hachi Maru Pop', cursive;
-      font-size: 2rem;
+      font-size: 1.8rem;
       color: #333;
       position: relative;
       display: inline-block;
       background: #fff;
-      border: 2.5px solid #333;
-      border-radius: 24px;
-      padding: 0.6rem 1.4rem;
-      margin-bottom: 0.5rem;
+      border: 2px solid #333;
+      border-radius: 18px;
+      padding: 0.5rem 1.2rem;
+      line-height: 1.4;
     }
     .greeting-bubble::after {
       content: '';
       position: absolute;
-      bottom: -18px;
-      left: 28px;
-      width: 0;
-      border: 10px solid transparent;
+      bottom: -16px; left: 24px;
+      border: 9px solid transparent;
       border-top-color: #333;
     }
     .greeting-bubble::before {
       content: '';
       position: absolute;
-      bottom: -13px;
-      left: 30px;
-      width: 0;
-      border: 8px solid transparent;
-      border-top-color: #fff;
+      bottom: -11px; left: 26px;
+      border: 7px solid transparent;
+      border-top-color: #fef9ec;
       z-index: 1;
     }
-
-    /* カオスグリッド */
-    .chaos-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: auto auto auto;
-      gap: 1.5rem;
-      align-items: start;
-      margin-bottom: 3rem;
+    .tile-label {
+      font-size: 0.7rem;
+      color: #bbb;
+      letter-spacing: 0.12em;
+      margin-bottom: 12px;
+      text-transform: uppercase;
     }
-    .area-greeting { grid-column: 1; grid-row: 1; padding-top: 1rem; }
-    .area-diary    { grid-column: 2 / 4; grid-row: 1; }
-    .area-roulette { grid-column: 1 / 3; grid-row: 2; }
-    .area-song     { grid-column: 3; grid-row: 2 / 4; align-self: start; }
-    .area-posts    { grid-column: 1 / 3; grid-row: 3; }
 
-    .area-roulette { transform: rotate(-1.5deg); }
-    .area-diary    { transform: rotate(1deg); }
-    .roulette-box { text-align: center; }
-    .roulette-machine { justify-content: center; }
+    /* 動静ボタン */
+    .tile-diary img { width: 100%; max-width: 360px; transition: transform 0.2s; }
+    .tile-diary a:hover img { transform: scale(1.03); }
+
+    /* 今日の一曲 */
+    .tile-song iframe { width: 100%; border: none; border-radius: 12px; flex: 1; }
 
     /* ルーレット */
-    .roulette-box {
-      background: #f2f2f0;
-      border-radius: 20px;
-      padding: 1.4rem 1.6rem 1.2rem;
-    }
-    .roulette-logo {
-      display: block;
-      max-width: 220px;
-      width: 100%;
-      margin: 0 auto 1rem;
-    }
-    .roulette-machine {
-      display: inline-flex;
-      gap: 6px;
-      margin-bottom: 1rem;
-    }
+    .roulette-logo { display: block; max-width: 180px; width: 100%; margin: 0 auto 12px; }
+    .roulette-machine { display: inline-flex; gap: 6px; margin-bottom: 12px; }
     .roulette-window {
-      width: 120px;
-      height: 56px;
-      overflow: hidden;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 110px; height: 52px;
+      background: #fff; border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      display: flex; align-items: center; justify-content: center;
     }
-    .drum-item { font-size: 1.15rem; font-weight: 700; color: #333; white-space: nowrap; }
+    .drum-item { font-size: 1.1rem; font-weight: 700; color: #333; white-space: nowrap; }
     .roulette-btn {
-      display: block;
-      margin: 0 auto;
-      padding: 0.5rem 1.8rem;
-      border: none;
-      border-radius: 999px;
-      background: #333;
-      color: #fff;
-      font-size: 0.9rem;
-      font-family: inherit;
-      cursor: pointer;
-      transition: opacity 0.2s;
+      display: block; margin: 0 auto;
+      padding: 0.45rem 1.6rem;
+      border: none; border-radius: 999px;
+      background: #333; color: #fff;
+      font-size: 0.88rem; font-family: inherit;
+      cursor: pointer; transition: opacity 0.2s;
     }
     .roulette-btn:hover { opacity: 0.75; }
     .roulette-btn:disabled { opacity: 0.3; cursor: default; }
 
-    /* 今日の一曲 */
-    .song-label {
-      font-size: 0.75rem;
-      color: #aaa;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.6rem;
-    }
-    .area-song iframe {
-      width: 100%;
-      border-radius: 12px;
-      border: none;
-    }
-
-    /* カテゴリ・カード */
-    .category-nav {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-    }
+    /* 記事一覧 */
+    .category-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
     .category-btn {
       padding: 0.3rem 0.9rem;
-      border: 1px solid #ccc;
-      border-radius: 20px;
-      background: #fff;
-      color: #555;
-      font-size: 0.85rem;
-      text-decoration: none;
-      transition: all 0.2s;
+      border: 1px solid #ccc; border-radius: 20px;
+      background: #fff; color: #555;
+      font-size: 0.82rem; text-decoration: none; transition: all 0.2s;
     }
     .category-btn:hover, .category-btn.active { background: #333; color: #fff; border-color: #333; }
-    .book-counter {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: #aaa;
-      margin-left: 0.3rem;
-    }
-    .book-counter strong { color: #555; font-size: 1rem; }
-    .posts {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 3rem;
-    }
-    .card { position: relative; min-height: 200px; }
+    .book-counter { font-size: 0.78rem; color: #aaa; margin-left: 4px; }
+    .book-counter strong { color: #555; }
+    .posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2.5rem; }
+    .card { position: relative; min-height: 190px; }
     .card-blob { position: absolute; inset: 0; width: 100%; height: 100%; }
     .card-blob path { fill: #dff0e0; stroke: none; }
     .card:hover .card-blob path { fill: #cce8ce; }
     .card-text {
-      position: relative;
-      z-index: 1;
-      padding: 1.6rem;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      min-height: 200px;
+      position: relative; z-index: 1;
+      padding: 1.4rem; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; min-height: 190px;
     }
-    .card-title { font-size: 0.95rem; font-weight: 700; line-height: 1.5; }
+    .card-title { font-size: 0.92rem; font-weight: 700; line-height: 1.5; }
   </style>
 
   <script>
@@ -277,40 +224,38 @@ const blobs = [
     });
   </script>
 
-  <div class="chaos-grid">
+  <div class="bento">
 
     <!-- 左上：吹き出し -->
-    <div class="area-greeting">
+    <div class="tile tile-greeting">
       <span class="greeting-bubble" id="greeting"></span>
     </div>
 
-    <!-- 右上：動静ボタン -->
-    <div class="area-diary">
-      <a href="/diary" class="diary-btn">
+    <!-- 中央：動静ボタン（縦2行） -->
+    <div class="tile tile-diary">
+      <a href="/diary">
         <img src="/nikki.png" alt="日記" />
       </a>
     </div>
 
-    <!-- 左中：ルーレット -->
-    <div class="area-roulette">
-      <div class="roulette-box">
-        <img src="/ラッキーアイテム.png" alt="今日のラッキーアイテム" class="roulette-logo" />
-        <div class="roulette-machine">
-          <div class="roulette-window"><div class="drum-item" id="drum-adj">？</div></div>
-          <div class="roulette-window"><div class="drum-item" id="drum-nou">？</div></div>
-        </div>
-        <button class="roulette-btn" id="roulette-btn">まわす</button>
-      </div>
-    </div>
-
-    <!-- 右：今日の一曲（縦長） -->
-    <div class="area-song">
-      <div class="song-label">今日の一曲</div>
+    <!-- 右：今日の一曲（縦2行） -->
+    <div class="tile tile-song">
+      <div class="tile-label">今日の一曲</div>
       <iframe id="spotify-embed" src="" height="352" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
 
-    <!-- 左下：記事一覧 -->
-    <div class="area-posts">
+    <!-- 左中：ルーレット -->
+    <div class="tile tile-roulette">
+      <img src="/ラッキーアイテム.png" alt="今日のラッキーアイテム" class="roulette-logo" />
+      <div class="roulette-machine">
+        <div class="roulette-window"><div class="drum-item" id="drum-adj">？</div></div>
+        <div class="roulette-window"><div class="drum-item" id="drum-nou">？</div></div>
+      </div>
+      <button class="roulette-btn" id="roulette-btn">まわす</button>
+    </div>
+
+    <!-- 下段：記事一覧（全幅） -->
+    <div class="tile tile-articles">
       <div class="category-nav">
         <a href="/" class="category-btn active">すべて</a>
         {categories.map(cat => (
