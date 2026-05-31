@@ -9,7 +9,12 @@ const posts = (await getCollection('blog')).sort(
 const categories = [...new Set(posts.map(p => p.data.category))];
 const bookCount = posts.filter(p => p.data.category === '本').length;
 // 記事ごとにアメーバのサイズをランダムに（ビルド時に固定）
-const cardHeights = posts.map((_, i) => [150, 280, 160, 270, 145, 275, 155, 265][i % 8]);
+const palette = ['#dff0e0','#fde8c8','#fef3b0','#fcd5b0','#d4f0e8','#fef0c0','#f9ddd0','#dcf0dc'];
+const sizes   = [120, 300, 150, 270, 130, 290, 160, 250];
+const cardData = posts.map((_, i) => ({
+  size:  sizes[i % sizes.length],
+  color: palette[i % palette.length],
+}));
 
 function generateBlobPath(outerR: number[], innerR: number[]) {
   const cx = 0.5, cy = 0.5;
@@ -167,26 +172,29 @@ const blobs = [
     .book-counter { font-size: 0.78rem; color: #aaa; margin-left: 4px; }
     .book-counter strong { color: #555; }
     .posts {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 2.5rem;
-      justify-items: center;
-      align-items: start;
-      max-width: 1000px;
-      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
     }
-    .card { position: relative; width: 100%; }
-    .card-blob { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .card-blob path { fill: #dff0e0; stroke: none; }
-    .card:hover .card-blob path { fill: #cce8ce; }
+    .card {
+      position: relative;
+      border-radius: 50%;
+      flex-shrink: 0;
+      transition: filter 0.2s;
+    }
+    .card:hover { filter: brightness(0.95); }
     .card-text {
-      position: relative; z-index: 1;
-      padding: 1.4rem; text-decoration: none; color: inherit;
+      position: absolute; inset: 0;
+      text-decoration: none; color: inherit;
       display: flex; flex-direction: column;
       justify-content: center; align-items: center;
       text-align: center;
+      padding: 1rem;
+      border-radius: 50%;
     }
-    .card-title { font-size: 0.92rem; font-weight: 700; line-height: 1.5; }
+    .card-title { font-size: 0.88rem; font-weight: 700; line-height: 1.5; }
 
     /* 今日の一曲（横長） */
     .song-label { font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; white-space: nowrap; writing-mode: vertical-rl; }
@@ -282,11 +290,8 @@ const blobs = [
       </div>
       <div class="posts">
         {posts.map((post, i) => (
-          <div class="card" style={`min-height: ${cardHeights[i]}px`}>
-            <svg class="card-blob" viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-              <path d={blobs[i % blobs.length]} />
-            </svg>
-            <a href={`/blog/${post.id}`} class="card-text" style={`min-height: ${cardHeights[i]}px`}>
+          <div class="card" style={`width:${cardData[i].size}px; height:${cardData[i].size}px; background:${cardData[i].color};`}>
+            <a href={`/blog/${post.id}`} class="card-text">
               <div class="card-title">{post.data.title}</div>
             </a>
           </div>
