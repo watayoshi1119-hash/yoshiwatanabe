@@ -7,6 +7,7 @@ const posts = (await getCollection('blog')).sort(
 );
 
 const categories = [...new Set(posts.map(p => p.data.category))];
+const bookCount = posts.filter(p => p.data.category === '本').length;
 
 function generateBlobPath(outerR: number[], innerR: number[]) {
   const cx = 0.5, cy = 0.5;
@@ -158,9 +159,70 @@ const blobs = [
     }
     .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.5; }
     .card-desc { font-size: 0.85rem; color: #666; line-height: 1.6; }
+
+    /* 訪問者へのひとこと */
+    .greeting {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #888;
+      margin-bottom: 2rem;
+      min-height: 1.5em;
+    }
+
+    /* 今日の一曲 */
+    .song-section {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+    }
+    .song-label {
+      font-size: 0.75rem;
+      color: #aaa;
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: 0.8rem;
+    }
+    .song-section iframe {
+      width: 100%;
+      border-radius: 12px;
+      border: none;
+    }
+
+    /* 読んだ本カウンター */
+    .book-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-left: 0.5rem;
+    }
+    .book-counter strong { color: #555; font-size: 1rem; }
   </style>
 
   <script>
+    // 訪問者へのひとこと
+    const greetings = ['よう','いらっしゃい','見てたのか','また来たね','暇だね','ゆっくりしてけ','なんか用？','おう','どうぞ','まあ座れ'];
+    const g = document.getElementById('greeting');
+    if (g) g.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+
+    // 今日の一曲
+    const tracks = [
+      '2PuZC7hxsslTsJHx7Q0IN8', // DOUKUTSU - Moment Joon
+      '0C9T668QTVtOnQVH7LpRrC', // lie - SEBii, lieu
+      '2FppvAGabIb1dyBXBjy8lV', // Karagenki - Siero
+      '0yJOqnpAsvGl6VDNa4LqMy', // Run Now - Kamui, swetty
+      '3iZwn7D6ugrZdysRd8bs06', // ISOGE - Lunv Loyal
+      '3um48ZL0kAqMDhnOwSSCeP', // You Came Back - KANDYTOWN
+      '6AhYshWZvuR3uHeY6SLBUH', // 阿波の踊り子 - blend house
+      '16iDq9o0YzEq6Ibasi92sD', // MoShPiT! - ramtoro
+      '5N4reZXVKruh2upgEWaUP0', // cesium - AssToro
+      '1sd6j2a7zm0nVRJQ77k5HS', // Real Love - Watson, Sonsi
+      '7m3uPc3OBWLYaay0biiTn0', // よるのとしょかん - 鈴木真海子
+    ];
+    const trackId = tracks[Math.floor(Math.random() * tracks.length)];
+    const iframe = document.getElementById('spotify-embed');
+    if (iframe) iframe.src = `https://open.spotify.com/embed/track/${trackId}?utm_source=generator`;
+
     const adj = ['あたらしい','ふるい','やさしい','きびしい','あかるい','くらい','おおきい','ちいさい','うれしい','かなしい','たのしい','こわい','あつい','さむい','はやい','おそい','うつくしい','みにくい','おもい','かるい','あおい','あかい','しろい','くろい','あまい','からい','すっぱい','にがい','ながい','みじかい','やわらかい','かたい','とおい','ちかい','ひろい','せまい','ふかい','あさい'];
     const nou = ['とりかぶと','バーミヤン','中央線','喫煙所','紹興酒','増田書店','バス停','夕焼け','珈琲','文庫本','タバコ','公衆電話','踏切','猫','傘','レシート','自販機','橋','月','夢','鍵','手紙','電球','砂糖','鉛筆','窓','骨董品','地図','雑踏','記憶','影','時計','石畳','缶詰','川','ノート','灰皿','切符','路地','電線'];
 
@@ -192,6 +254,8 @@ const blobs = [
     });
   </script>
 
+  <p class="greeting" id="greeting"></p>
+
   <a href="/diary" class="diary-btn">
     <img src="/nikki.png" alt="日記" />
   </a>
@@ -211,11 +275,17 @@ const blobs = [
     </div>
   </div>
 
+  <div class="song-section">
+    <div class="song-label">今日の一曲</div>
+    <iframe id="spotify-embed" src="" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+
   <div class="category-nav">
     <a href="/" class="category-btn active">すべて</a>
     {categories.map(cat => (
       <a href={`/category/${cat}`} class="category-btn">{cat}</a>
     ))}
+    <span class="book-counter">今年読んだ本 <strong>{bookCount}</strong> 冊</span>
   </div>
 
   <div class="posts">
