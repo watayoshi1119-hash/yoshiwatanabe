@@ -9,12 +9,25 @@ const posts = (await getCollection('blog')).sort(
 const categories = [...new Set(posts.map(p => p.data.category))];
 const bookCount = posts.filter(p => p.data.category === '本').length;
 // 記事ごとにアメーバのサイズをランダムに（ビルド時に固定）
-const palette = ['#dff0e0','#fde8c8','#fef3b0','#fcd5b0','#d4f0e8','#fef0c0','#f9ddd0','#dcf0dc'];
-const sizes   = [120, 300, 150, 270, 130, 290, 160, 250];
-const cardData = posts.map((_, i) => ({
-  size:  sizes[i % sizes.length],
-  color: palette[i % palette.length],
-}));
+// 同明度・同彩度で色相を自由に変えたパステル
+const palette = [
+  'hsl(340,55%,86%)', // ピンク
+  'hsl(210,55%,86%)', // スカイブルー
+  'hsl(270,45%,86%)', // ラベンダー
+  'hsl(25, 65%,86%)', // ピーチ
+  'hsl(160,50%,83%)', // ミントグリーン
+  'hsl(50, 65%,86%)', // レモン
+  'hsl(190,55%,83%)', // アクアマリン
+  'hsl(10, 55%,86%)', // サーモン
+];
+// タイトルが1行で収まる円サイズを計算
+// 日本語1文字 ≈ 14px、テキストが円の内接正方形に収まるには diameter = textW * √2
+const CHAR_PX = 14;
+const cardData = posts.map((post, i) => {
+  const textW = post.data.title.length * CHAR_PX;
+  const size = Math.ceil(textW * 1.45) + 24; // √2≈1.41 + 少し余白
+  return { size, color: palette[i % palette.length] };
+});
 
 function generateBlobPath(outerR: number[], innerR: number[]) {
   const cx = 0.5, cy = 0.5;
@@ -194,7 +207,7 @@ const blobs = [
       padding: 1rem;
       border-radius: 50%;
     }
-    .card-title { font-size: 0.88rem; font-weight: 700; line-height: 1.5; }
+    .card-title { font-size: 0.88rem; font-weight: 700; white-space: nowrap; }
 
     /* 今日の一曲（横長） */
     .song-label { font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; white-space: nowrap; writing-mode: vertical-rl; }
