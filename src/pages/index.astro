@@ -8,6 +8,8 @@ const posts = (await getCollection('blog')).sort(
 
 const categories = [...new Set(posts.map(p => p.data.category))];
 const bookCount = posts.filter(p => p.data.category === '本').length;
+// 記事ごとにアメーバのサイズをランダムに（ビルド時に固定）
+const cardHeights = posts.map((_, i) => [190, 250, 210, 270, 180, 230][i % 6]);
 
 function generateBlobPath(outerR: number[], innerR: number[]) {
   const cx = 0.5, cy = 0.5;
@@ -58,26 +60,20 @@ const blobs = [
     }
     .diary-btn:hover img { opacity: 0.85; transform: scale(1.02); }
 
-    /* ルーレット */
     /* ベントグリッド */
     .bento {
       display: grid;
-      grid-template-columns: 1fr 1.6fr 1fr;
-      grid-template-rows: auto auto auto;
+      grid-template-columns: 1fr 1.8fr;
       gap: 14px;
     }
-    .tile {
-      border-radius: 24px;
-      padding: 28px;
-      overflow: hidden;
-    }
+    .tile { border-radius: 24px; padding: 28px; overflow: hidden; }
 
     /* タイル配置 */
-    .tile-greeting { grid-column: 1; grid-row: 1; background: #fef9ec; display: flex; flex-direction: column; justify-content: center; }
-    .tile-diary    { grid-column: 2; grid-row: 1 / 3; background: #fff; display: flex; align-items: center; justify-content: center; }
-    .tile-song     { grid-column: 3; grid-row: 1 / 3; background: #f0f4ff; display: flex; flex-direction: column; }
-    .tile-roulette { grid-column: 1; grid-row: 2; background: #f2f2f0; text-align: center; }
-    .tile-articles { grid-column: 1 / 4; grid-row: 3; background: transparent; padding: 14px 0 0; }
+    .tile-greeting { grid-column: 1; grid-row: 1; background: #fef9ec; display: flex; align-items: center; }
+    .tile-diary    { grid-column: 2; grid-row: 1; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .tile-roulette { grid-column: 1 / 3; grid-row: 2; background: #f2f2f0; display: flex; flex-direction: column; align-items: center; }
+    .tile-articles { grid-column: 1 / 3; grid-row: 3; background: transparent; padding: 14px 0 0; }
+    .tile-song     { grid-column: 1 / 3; grid-row: 4; background: #f8f8f6; display: flex; align-items: center; gap: 20px; }
 
     /* 吹き出し */
     .greeting-bubble {
@@ -89,7 +85,7 @@ const blobs = [
       background: #fff;
       border: 2px solid #333;
       border-radius: 18px;
-      padding: 0.5rem 1.2rem;
+      padding: 0.5rem 1.4rem;
       line-height: 1.4;
     }
     .greeting-bubble::after {
@@ -107,44 +103,34 @@ const blobs = [
       border-top-color: #fef9ec;
       z-index: 1;
     }
-    .tile-label {
-      font-size: 0.7rem;
-      color: #bbb;
-      letter-spacing: 0.12em;
-      margin-bottom: 12px;
-      text-transform: uppercase;
-    }
 
     /* 動静ボタン */
-    .tile-diary img { width: 100%; max-width: 360px; transition: transform 0.2s; }
+    .tile-diary img { width: 100%; max-width: 420px; transition: transform 0.2s; }
     .tile-diary a:hover img { transform: scale(1.03); }
 
-    /* 今日の一曲 */
-    .tile-song iframe { width: 100%; border: none; border-radius: 12px; flex: 1; }
-
-    /* ルーレット */
-    .roulette-logo { display: block; max-width: 180px; width: 100%; margin: 0 auto 12px; }
-    .roulette-machine { display: inline-flex; gap: 6px; margin-bottom: 12px; }
+    /* ルーレット 1.5倍 */
+    .roulette-logo { display: block; max-width: 270px; width: 100%; margin: 0 auto 16px; }
+    .roulette-machine { display: inline-flex; gap: 10px; margin-bottom: 16px; }
     .roulette-window {
-      width: 110px; height: 52px;
-      background: #fff; border-radius: 10px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      width: 165px; height: 78px;
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
       display: flex; align-items: center; justify-content: center;
     }
-    .drum-item { font-size: 1.1rem; font-weight: 700; color: #333; white-space: nowrap; }
+    .drum-item { font-size: 1.6rem; font-weight: 700; color: #333; white-space: nowrap; }
     .roulette-btn {
       display: block; margin: 0 auto;
-      padding: 0.45rem 1.6rem;
+      padding: 0.6rem 2.2rem;
       border: none; border-radius: 999px;
       background: #333; color: #fff;
-      font-size: 0.88rem; font-family: inherit;
+      font-size: 1rem; font-family: inherit;
       cursor: pointer; transition: opacity 0.2s;
     }
     .roulette-btn:hover { opacity: 0.75; }
     .roulette-btn:disabled { opacity: 0.3; cursor: default; }
 
     /* 記事一覧 */
-    .category-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+    .category-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0 auto 1.4rem; justify-content: center; }
     .category-btn {
       padding: 0.3rem 0.9rem;
       border: 1px solid #ccc; border-radius: 20px;
@@ -154,8 +140,15 @@ const blobs = [
     .category-btn:hover, .category-btn.active { background: #333; color: #fff; border-color: #333; }
     .book-counter { font-size: 0.78rem; color: #aaa; margin-left: 4px; }
     .book-counter strong { color: #555; }
-    .posts { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2.5rem; }
-    .card { position: relative; min-height: 190px; }
+    .posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2.5rem;
+      justify-items: center;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .card { position: relative; width: 100%; }
     .card-blob { position: absolute; inset: 0; width: 100%; height: 100%; }
     .card-blob path { fill: #dff0e0; stroke: none; }
     .card:hover .card-blob path { fill: #cce8ce; }
@@ -164,16 +157,19 @@ const blobs = [
       padding: 1.4rem; text-decoration: none; color: inherit;
       display: flex; flex-direction: column;
       justify-content: center; align-items: center;
-      text-align: center; min-height: 190px;
+      text-align: center;
     }
     .card-title { font-size: 0.92rem; font-weight: 700; line-height: 1.5; }
+
+    /* 今日の一曲（横長） */
+    .song-label { font-size: 0.7rem; color: #bbb; letter-spacing: 0.12em; white-space: nowrap; writing-mode: vertical-rl; }
+    .tile-song iframe { flex: 1; height: 80px; border: none; border-radius: 12px; }
   </style>
 
   <script>
-    // 訪問者へのひとこと
-    const greetings = ['よう','いらっしゃい','見てたのか','また来たね','暇だね','ゆっくりしてけ','なんか用？','おう','どうぞ','まあ座れ'];
+    // 訪問者へのひとこと（固定）
     const g = document.getElementById('greeting');
-    if (g) g.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+    if (g) g.textContent = 'またきたね';
 
     // 今日の一曲
     const tracks = [
@@ -226,25 +222,19 @@ const blobs = [
 
   <div class="bento">
 
-    <!-- 左上：吹き出し -->
+    <!-- 左：吹き出し -->
     <div class="tile tile-greeting">
       <span class="greeting-bubble" id="greeting"></span>
     </div>
 
-    <!-- 中央：動静ボタン（縦2行） -->
+    <!-- 右：動静ボタン -->
     <div class="tile tile-diary">
       <a href="/diary">
         <img src="/nikki.png" alt="日記" />
       </a>
     </div>
 
-    <!-- 右：今日の一曲（縦2行） -->
-    <div class="tile tile-song">
-      <div class="tile-label">今日の一曲</div>
-      <iframe id="spotify-embed" src="" height="352" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-    </div>
-
-    <!-- 左中：ルーレット -->
+    <!-- 全幅：ラッキーアイテム（中央） -->
     <div class="tile tile-roulette">
       <img src="/ラッキーアイテム.png" alt="今日のラッキーアイテム" class="roulette-logo" />
       <div class="roulette-machine">
@@ -254,7 +244,7 @@ const blobs = [
       <button class="roulette-btn" id="roulette-btn">まわす</button>
     </div>
 
-    <!-- 下段：記事一覧（全幅） -->
+    <!-- 全幅：記事一覧（中央揃え） -->
     <div class="tile tile-articles">
       <div class="category-nav">
         <a href="/" class="category-btn active">すべて</a>
@@ -265,16 +255,22 @@ const blobs = [
       </div>
       <div class="posts">
         {posts.map((post, i) => (
-          <div class="card">
+          <div class="card" style={`min-height: ${cardHeights[i]}px`}>
             <svg class="card-blob" viewBox="0 0 1 1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
               <path d={blobs[i % blobs.length]} />
             </svg>
-            <a href={`/blog/${post.id}`} class="card-text">
+            <a href={`/blog/${post.id}`} class="card-text" style={`min-height: ${cardHeights[i]}px`}>
               <div class="card-title">{post.data.title}</div>
             </a>
           </div>
         ))}
       </div>
+    </div>
+
+    <!-- 全幅：今日の一曲（横長、最下部） -->
+    <div class="tile tile-song">
+      <span class="song-label">今日の一曲</span>
+      <iframe id="spotify-embed" src="" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
     </div>
 
   </div>
