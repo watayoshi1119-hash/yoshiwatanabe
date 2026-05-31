@@ -9,7 +9,7 @@ const posts = (await getCollection('blog')).sort(
 const categories = [...new Set(posts.map(p => p.data.category))];
 const bookCount = posts.filter(p => p.data.category === '本').length;
 // 記事ごとにアメーバのサイズをランダムに（ビルド時に固定）
-const cardHeights = posts.map((_, i) => [190, 250, 210, 270, 180, 230][i % 6]);
+const cardHeights = posts.map((_, i) => [150, 280, 160, 270, 145, 275, 155, 265][i % 8]);
 
 function generateBlobPath(outerR: number[], innerR: number[]) {
   const cx = 0.5, cy = 0.5;
@@ -96,8 +96,9 @@ const blobs = [
     .tile-song {
       grid-column: 1 / 3; grid-row: 4;
       background: #f8f8f6;
-      justify-self: stretch; align-self: start;
+      justify-self: start; align-self: start;
       display: flex; align-items: center; gap: 20px;
+      width: 520px;
     }
 
     /* 吹き出し */
